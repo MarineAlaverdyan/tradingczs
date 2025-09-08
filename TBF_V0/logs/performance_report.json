@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "total_functions": 7,
+    "successful_calls": 7,
+    "failed_calls": 0,
+    "total_time_ms": 4521.796700020786,
+    "average_time_ms": 645.9709571458267
+  },
+  "slowest_functions": [
+    {
+      "name": "SimpleBuyer.buy_token",
+      "duration_ms": 3976.2081000371836,
+      "percentage": 87.93425188750537
+    },
+    {
+      "name": "MainTrader.setup",
+      "duration_ms": 450.832900009118,
+      "percentage": 9.970216042818677
+    },
+    {
+      "name": "SimpleClient.get_balance",
+      "duration_ms": 88.78019999247044,
+      "percentage": 1.9633832717880113
+    },
+    {
+      "name": "MainTrader.creation",
+      "duration_ms": 3.0785000417381525,
+      "percentage": 0.06808134566784041
+    },
+    {
+      "name": "SimpleClient.close",
+      "duration_ms": 2.5587999843992293,
+      "percentage": 0.05658812534379236
+    },
+    {
+      "name": "TokenInfo.from_listener_data",
+      "duration_ms": 0.17799995839595795,
+      "percentage": 0.003936487423132926
+    },
+    {
+      "name": "TradeConfig.creation",
+      "duration_ms": 0.1601999974809587,
+      "percentage": 0.0035428394531806856
+    }
+  ],
+  "failed_functions": [],
+  "detailed_metrics": [
+    {
+      "name": "TokenInfo.from_listener_data",
+      "duration_ms": 0.17799995839595795,
+      "success": true,
+      "error": null
+    },
+    {
+      "name": "TradeConfig.creation",
+      "duration_ms": 0.1601999974809587,
+      "success": true,
+      "error": null
+    },
+    {
+      "name": "MainTrader.creation",
+      "duration_ms": 3.0785000417381525,
+      "success": true,
+      "error": null
+    },
+    {
+      "name": "MainTrader.setup",
+      "duration_ms": 450.832900009118,
+      "success": true,
+      "error": null
+    },
+    {
+      "name": "SimpleClient.get_balance",
+      "duration_ms": 88.78019999247044,
+      "success": true,
+      "error": null
+    },
+    {
+      "name": "SimpleBuyer.buy_token",
+      "duration_ms": 3976.2081000371836,
+      "success": true,
+      "error": null
+    },
+    {
+      "name": "SimpleClient.close",
+      "duration_ms": 2.5587999843992293,
+      "success": true,
+      "error": null
+    }
+  ]
+}
