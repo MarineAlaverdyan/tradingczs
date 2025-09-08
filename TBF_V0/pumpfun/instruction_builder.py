@@ -11,9 +11,9 @@ from solders.instruction import Instruction, AccountMeta
 from solders.system_program import ID as SYSTEM_PROGRAM_ID
 
 try:
-    from ..core.pubkeys import PUMP_PROGRAM_ID, PUMP_FEE_CONFIG_PROGRAM, PUMP_FEE_CONFIG_ACCOUNT, TOKEN_PROGRAM_ID
+    from ..core.pubkeys import PUMP_PROGRAM_ID, TOKEN_PROGRAM_ID
 except ImportError:
-    from core.pubkeys import PUMP_PROGRAM_ID, PUMP_FEE_CONFIG_PROGRAM, PUMP_FEE_CONFIG_ACCOUNT, TOKEN_PROGRAM_ID
+    from core.pubkeys import PUMP_PROGRAM_ID, TOKEN_PROGRAM_ID
 ASSOCIATED_TOKEN_PROGRAM_ID = Pubkey.from_string("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL")
 
 # Настройка логирования
@@ -77,7 +77,7 @@ class InstructionBuilder:
         )
         
         # Аккаунты для инструкции согласно IDL (16 аккаунтов с fee_config PDA)
-        # Добавляем недостающие аккаунты - pump.fun ожидает больше 14
+        # Исправленная структура аккаунтов без fee_config
         accounts = [
             AccountMeta(pubkey=self.constants.GLOBAL_ACCOUNT, is_signer=False, is_writable=False),
             AccountMeta(pubkey=self.constants.FEE_RECIPIENT, is_signer=False, is_writable=True),
@@ -88,13 +88,9 @@ class InstructionBuilder:
             AccountMeta(pubkey=buyer_wallet, is_signer=True, is_writable=True),  # user
             AccountMeta(pubkey=SYSTEM_PROGRAM_ID, is_signer=False, is_writable=False),
             AccountMeta(pubkey=TOKEN_PROGRAM_ID, is_signer=False, is_writable=False),
-            AccountMeta(pubkey=self._get_creator_vault(bonding_curve), is_signer=False, is_writable=True),
+            AccountMeta(pubkey=self.constants.RENT_SYSVAR, is_signer=False, is_writable=False),
             AccountMeta(pubkey=self.constants.EVENT_AUTHORITY, is_signer=False, is_writable=False),
             AccountMeta(pubkey=self.constants.PROGRAM_ID, is_signer=False, is_writable=False),
-            AccountMeta(pubkey=self._get_global_volume_accumulator(), is_signer=False, is_writable=True),
-            AccountMeta(pubkey=self._get_user_volume_accumulator(buyer_wallet), is_signer=False, is_writable=True),
-            AccountMeta(pubkey=buyer_wallet, is_signer=True, is_writable=True),  # user_acc_target
-            AccountMeta(pubkey=PUMP_FEE_CONFIG_ACCOUNT, is_signer=False, is_writable=False)  # fee_config
         ]
         
         instruction = Instruction(
@@ -221,34 +217,6 @@ class InstructionBuilder:
         
         logger.debug(f"ATA инструкция создана для {ata_address}")
         return instruction
-    
-    def _get_creator_vault(self, bonding_curve: Pubkey) -> Pubkey:
-        """Рассчитывает адрес creator vault PDA"""
-        # Нужно получить creator из bonding curve, пока используем заглушку
-        # В реальности нужно читать bonding_curve аккаунт
-        creator_seed = b"creator-vault"
-        seeds = [creator_seed, bytes(bonding_curve)]
-        creator_vault, _ = Pubkey.find_program_address(seeds, self.constants.PROGRAM_ID)
-        return creator_vault
-    
-    def _get_global_volume_accumulator(self) -> Pubkey:
-        """Рассчитывает адрес global volume accumulator PDA"""
-        seeds = [b"global_volume_accumulator"]
-        global_vol_acc, _ = Pubkey.find_program_address(seeds, self.constants.PROGRAM_ID)
-        return global_vol_acc
-    
-    def _get_user_volume_accumulator(self, user_wallet: Pubkey) -> Pubkey:
-        """Получить PDA для user volume accumulator"""
-        seeds = [
-            b"user_volume_accumulator",
-            bytes(user_wallet)
-        ]
-        pda, _ = Pubkey.find_program_address(seeds, self.constants.PROGRAM_ID)
-        return pda
-    
-    def _get_fee_config(self) -> Pubkey:
-        """Получить fee config аккаунт"""
-        return PUMP_FEE_CONFIG_ACCOUNT
 
 
 # Пример использования
